@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grapher</title>
+    
+
+    <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+    <link rel="manifest" href="img/site.webmanifest">
+    <link rel="mask-icon" href="img/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#2b5797">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <link rel="stylesheet" href="MQ/mathquill.css"/>
+    <script src="jq/jquery1.11.0.js"></script>
+    <script src="MQ/mathquill.min.js"></script>
+    <script>var MQ = MathQuill.getInterface(2);</script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+    
+    <script src="js/parser.js"></script>
+    <script src="js/GraphObj.js"></script>
+    <script src="js/UserInterface.js"></script>
+    <script src="js/download.js"></script>
+    <script src="js/canvasMouseEvents.js"></script>
+</head>
+<body>
+    <div class="topLogo">
+        Grapher
+    </div>
+    <!--a id="hg-logo" href="http://www.humboldt-gymnasium-eichwalde.de/" target="_blank"></a-->
+    <div id="rightbar"></div>
+    <div class="mainContent">
+        <canvas id="canvas" width="600" height="300"></canvas>
+        <div id = "functionbigbox" class="bigbox">
+            <div id = "functionTitle" class="bigboxtitle">
+                <span id="tilteFunktionen" onclick="UI.FunktionenClicked(this)">Funktionen</span>
+                &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<span id="titlePoints" class="nactive" onclick="UI.PunkteClicked(this)">Punkte</span>
+                &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;<span id="titleCosys" class="nactive" onclick="UI.CoSysClicked(this)">Koordinatensystem</span>
+                &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+                <span id="titleD" onclick="saveGraph()"></span>
+            </div>
+            <div id="bigboxtitleline"></div>
+            <div id = "functionContainer">
+                <div class="functionBox">
+                    <div class="firstrow">
+                        <span class="colorbox" onclick="UI.fcolorboxclicked(this)">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class="fvonxbox">y =&ensp;</span>
+                        <span class="functionInputBox">sinx</span>
+                        <div class="removefunction" onclick="UI.removeFunction(this)">x</div>
+                        <div class="warning" style="display: none;">&#x26a0;</div>
+                    </div>
+                    <div class="USInput">
+                        <div class="USIflex">
+                            <div class="leftcheckbox">
+                                <div class="uicheckbox visible">
+                                    <div class="cb active"></div>
+                                    <div class="cblabel">Funktion anzeigen</div>
+                                </div>
+                                <div class="uicheckbox nullstellen">
+                                    <div class="cb active"></div>
+                                    <div class="cblabel">Nullstellen anzeigen</div>
+                                </div>
+                                <div class="uicheckbox extrema">
+                                    <div class="cb"></div>
+                                    <div class="cblabel">Extrema anzeigen</div>
+                                </div>
+                            </div>
+                            <div class="rightComp">
+                                <div class="intervalTitle">Definitionsbereich</div>
+                                <div class="CompFlex">
+                                    <span class="lbound intervalbound">-\infinity</span>
+                                    <span class="tryoutspan">&lt;x&lt;</span>
+                                    <span class="rbound intervalbound">\infinity</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="funcWertetabelleWrapper">
+                            <div class="funcWertetabelle">
+                                <div class="row1 mostleft">x</div>
+                                <div class="row1 pointRow1"><div>1</div></div>
+                                <div class="row1 mostright" onclick="UI.elargirFonctionPointTableau(this.parentNode)"></div>
+                                <div class="row2 mostleft">f(x)</div>
+                                <div class="row2 pointRow2">0.841</div>
+                                <div class="row2 mostright" onclick="UI.elargirFonctionPointTableau(this.parentNode)"></div>
+                                <div class="row3 mostleft"></div>
+                                <div class="row3 pointRow3">x</div>
+                                <div class="row3 mostright" onclick="UI.elargirFonctionPointTableau(this.parentNode)"></div>
+                            </div>
+                        </div>
+                   </div>
+                </div>
+                <div id="AddNewFunctionButton" onclick="UI.pushNewFunction()">+</div>
+            </div>
+            <div id="pointsContainer">
+                <div class="pointBox">
+                    <div class="firstrow">
+                        <span class="colorbox" style="background-color: blue;" onclick="UI.pcolorboxclicked(this)">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class="pointInputBox"><span class="pointCoordinatesInputA">P(</span><span class="pointInputLeft">2</span><span class="pointCoordinatesInputB">;</span><span class="pointInputRight">2</span><span class="pointCoordinatesInputC">)</span></span>
+                        <div class="removepoint" onclick="UI.removePoint(this)">x</div>
+                        <div class="warning" style="display: none;">&#x26a0;</div>
+                    </div>
+                    <div class="USInput" style="display: none;">
+                        <div class="USIflex">
+                            <div class="leftcheckbox">
+                                <div class="uicheckbox pvisible">
+                                    <div class="cb active"></div>
+                                    <div class="cblabel">Punkt anzeigen</div>
+                                </div>
+                                <div class="uicheckbox cvisible">
+                                    <div class="cb"></div>
+                                    <div class="cblabel">Kreis anzeigen</div>
+                                </div>
+                                <div class="uicheckbox nvisible">
+                                    <div class="cb active"></div>
+                                    <div class="cblabel">Namen anzeigen</div>
+                                </div>
+                            </div>
+                            <div class="rightComp">
+                                <div class="pointTitle">Name</div>
+                                <div class="CompFlex">
+                                    <span class="PnameTextfield mq-editable-field" contenteditable="true" spellcheck="false" autocapitalize="false">f(x) = sin(x)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="AddNewPointButton" onclick="UI.pushNewPoint(this)">+</div>
+            </div>
+            <div id="gridSettingsContainer">
+                <div class="USInput">
+                    <div id="gridSl">
+                        <div class="USItitle">Achsenbeschriftung</div>
+                        <div class="gridAxisName"><span class="axisname">x-Achse:</span> <span id="xaxisname"><span class="AnameTextfield mq-editable-field" contenteditable="true" spellcheck="false" autocapitalize="false">x</span></span></div>
+                        <div class="gridAxisName mB"><span class="axisname">y-Achse:</span> <span id="yaxisname"><span class="AnameTextfield mq-editable-field" contenteditable="true" spellcheck="false" autocapitalize="false">y</span></span></div>
+                        <div class="uicheckbox visible">
+                            <div class="cb active"></div>
+                            <div class="cblabel">Achsenbeschriftung anzeigen</div>
+                        </div>
+                        <div class="uicheckbox visible">
+                            <div class="cb active"></div>
+                            <div class="cblabel">Pfeile anzeigen</div>
+                        </div>
+                    </div>
+                    <div class="gridSr">
+                        <div class="USItitle">Koordinatensystem</div>
+                        <div id="gridCSSgrid">
+                            <div class="gridL">Breite:</div>
+                            <div class="gridR">600</div>
+                            <div class="gridW">&#x26a0;</div>
+                            <div class="gridL">Höhe:</div>
+                            <div class="gridR">300</div>
+                            <div class="gridW">&#x26a0;</div>
+                            <div class="gridL">Kästchengröße:</div>
+                            <div class="gridR">40</div>
+                            <div class="gridW">&#x26a0;</div>
+                            <div class="gridL">X-Skalierung:</div>
+                            <div class="gridR">1</div>
+                            <div class="gridW">&#x26a0;</div>
+                            <div class="gridL">Y-Skalierung:</div>
+                            <div class="gridR">1</div>
+                            <div class="gridW">&#x26a0;</div>
+                            <div class="gridL">X-Achsenbegin:</div>
+                            <div class="gridR">-3</div>
+                            <div class="gridW">&#x26a0;</div>
+                            <div class="gridL">Y-Achsenbegin:</div>
+                            <div class="gridR">-4</div>
+                            <div class="gridW">&#x26a0;</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>
